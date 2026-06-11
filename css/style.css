@@ -56,6 +56,9 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  /* 关掉 iOS 浏览器给按钮加的默认立体样式 */
+  appearance: none;
+  -webkit-appearance: none;
 }
 button:active { transform: scale(0.95); }
 button:disabled { opacity: 0.4; cursor: default; }
@@ -177,7 +180,8 @@ button:disabled { opacity: 0.4; cursor: default; }
   gap: 3px;
   background: var(--card);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  /* 棋盘保持扁平，去掉阴影让盘面更清晰 */
+  border: 2px solid var(--line);
   padding: 8px;
   margin: 0 auto 14px;
   width: 100%;
@@ -192,6 +196,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   background: #fbfaff;
   border: 2px solid var(--line);
   border-radius: 10px;
+  box-shadow: none;
   font-size: calc(min(94vw, 532px) / var(--n) * 0.5);
   line-height: 1;
   padding: 0;
@@ -199,18 +204,24 @@ button:disabled { opacity: 0.4; cursor: default; }
 }
 .board.numbers-theme .cell { font-weight: bold; }
 
+/* 底色规则（题目格 / 交替宫块），会被下方的高亮规则覆盖 */
 .cell.given { background: var(--given-bg); }
-/* 相邻宫交替底色（在高亮规则之前，可被高亮覆盖） */
-.cell.box-alt { background: #d9e9fc; border-color: #c5daf3; }
+.cell.box-alt { background: #d9e9fc; }
 .cell.box-alt.given { background: #d2d3f3; }
-.cell.hl-line { background: #fff4cd; }
-.cell.hl-same { background: #aee2ff; border-color: var(--accent); }
-.cell.selected {
+
+/* 高亮规则：补上 .box-alt.given 组合，保证优先级在任何底色之上，样式完全一致 */
+.cell.hl-line,
+.cell.box-alt.given.hl-line { background: #fff4cd; }
+.cell.hl-same,
+.cell.box-alt.given.hl-same { background: #aee2ff; border-color: var(--accent); }
+.cell.selected,
+.cell.box-alt.given.selected {
   border-color: var(--primary);
   background: #fff1e4;
   box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.35);
 }
-.cell.wrong {
+.cell.wrong,
+.cell.box-alt.given.wrong {
   background: #ffe3e3;
   border-color: var(--bad);
 }
@@ -339,11 +350,6 @@ button:disabled { opacity: 0.4; cursor: default; }
   pointer-events: none;
   z-index: 100;
 }
-
-/* ---------- 宫格粗边框 ---------- */
-
-.cell.box-r { border-right-width: 4px; border-right-color: #c9bfe8; }
-.cell.box-b { border-bottom-width: 4px; border-bottom-color: #c9bfe8; }
 
 /* ---------- 小屏适配 ---------- */
 

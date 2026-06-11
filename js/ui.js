@@ -20,8 +20,6 @@
     if (stateMod.isWrong(game, r, c)) cls.push('wrong');
 
     if (dims) {
-      if ((c + 1) % dims.cols === 0 && c !== size - 1) cls.push('box-r');
-      if ((r + 1) % dims.rows === 0 && r !== size - 1) cls.push('box-b');
       // 相邻宫交替底色，让孩子一眼看清宫的范围
       var boxRow = Math.floor(r / dims.rows);
       var boxCol = Math.floor(c / dims.cols);
