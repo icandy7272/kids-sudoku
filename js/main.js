@@ -167,11 +167,20 @@
     renderGame();
   }
 
+  /* 交互不变式：selectedCell 和 activeSymbol 任何时刻最多只有一个生效，
+   * 避免“格子和图案同时高亮”的混乱。 */
   var handlers = {
     onCellClick: function (r, c) {
       if (K.state.isGiven(game, r, c)) {
-        // 点提示格：高亮相同符号，帮助观察
-        view = Object.assign({}, view, { selectedCell: { r: r, c: c }, lastMove: null });
+        if (view.activeSymbol) {
+          // 印章模式下点题目格：保持印章，不抢占选中态
+          K.audio.playTap();
+          return;
+        }
+        // 点题目格：高亮相同符号，帮助观察；再点一次取消
+        var selGiven = view.selectedCell;
+        var sameGiven = selGiven && selGiven.r === r && selGiven.c === c;
+        view = Object.assign({}, view, { selectedCell: sameGiven ? null : { r: r, c: c }, lastMove: null });
         K.audio.playTap();
         renderGame();
         return;
@@ -192,11 +201,12 @@
     },
 
     onSymbolClick: function (value) {
-      if (view.selectedCell && !view.activeSymbol) {
-        place(view.selectedCell.r, view.selectedCell.c, value);
+      var sel = view.selectedCell;
+      if (sel && !view.activeSymbol && !K.state.isGiven(game, sel.r, sel.c)) {
+        place(sel.r, sel.c, value);
         return;
       }
-      // 没有选中格子：把符号当作“印章”，再点格子直接盖上去
+      // 没选格子（或选的是题目格）：把符号当作“印章”，再点格子直接盖上去
       var nextActive = view.activeSymbol === value ? null : value;
       view = Object.assign({}, view, { activeSymbol: nextActive, selectedCell: null, lastMove: null });
       K.audio.playTap();
@@ -204,8 +214,9 @@
     },
 
     onEraserClick: function () {
-      if (view.selectedCell && !view.activeSymbol) {
-        erase(view.selectedCell.r, view.selectedCell.c);
+      var sel = view.selectedCell;
+      if (sel && !view.activeSymbol && !K.state.isGiven(game, sel.r, sel.c)) {
+        erase(sel.r, sel.c);
         return;
       }
       var nextActive = view.activeSymbol === 'eraser' ? null : 'eraser';
@@ -235,6 +246,8 @@
   }
 
   function celebrate() {
+    // 延迟触发期间可能已点了“换一题”，确认当前盘面仍是完成态
+    if (!K.state.isComplete(game)) return;
     var earned = DIFFICULTY_OPTIONS.filter(function (d) { return d.id === game.difficulty; })[0].stars;
     addStars(earned);
     K.audio.playWin();
