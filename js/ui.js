@@ -33,9 +33,6 @@
       var selVal = game.entries[sel.r][sel.c];
       if (selVal !== 0 && v === selVal) cls.push('hl-same');
     }
-    if (view.activeSymbol && typeof view.activeSymbol === 'number' && v === view.activeSymbol) {
-      cls.push('hl-same');
-    }
 
     var last = view.lastMove;
     if (last && last.r === r && last.c === c) {
@@ -90,7 +87,6 @@
       btn.type = 'button';
       btn.className = 'symbol-btn';
       if (theme.type === 'number') btn.classList.add('num-' + v);
-      if (view.activeSymbol === v) btn.classList.add('active');
 
       var remaining = countRemaining(game, v);
       if (remaining <= 0) btn.classList.add('done');
@@ -105,20 +101,19 @@
       badge.textContent = remaining > 0 ? remaining : '✓';
       btn.appendChild(badge);
 
-      btn.setAttribute('aria-label', '选择' + symbolFor(theme, v) + '，还差' + Math.max(remaining, 0) + '个');
-      (function (value) {
-        btn.addEventListener('click', function () { handlers.onSymbolClick(value); });
-      })(v);
+      btn.setAttribute('aria-label', '填入' + symbolFor(theme, v) + '，还差' + Math.max(remaining, 0) + '个');
+      (function (value, button) {
+        button.addEventListener('click', function () { handlers.onSymbolClick(value, button); });
+      })(v, btn);
       container.appendChild(btn);
     }
 
     var eraser = document.createElement('button');
     eraser.type = 'button';
     eraser.className = 'symbol-btn eraser';
-    if (view.activeSymbol === 'eraser') eraser.classList.add('active');
     eraser.innerHTML = '<span class="symbol-face">🧽</span>';
     eraser.setAttribute('aria-label', '橡皮擦');
-    eraser.addEventListener('click', function () { handlers.onEraserClick(); });
+    eraser.addEventListener('click', function () { handlers.onEraserClick(eraser); });
     container.appendChild(eraser);
   }
 

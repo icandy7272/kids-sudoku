@@ -23,7 +23,7 @@
 
   var settings = { size: 4, themeId: 'animals', difficulty: 'easy' };
   var game = null;
-  var view = { selectedCell: null, activeSymbol: null, lastMove: null };
+  var view = { selectedCell: null, lastMove: null };
 
   var el = {};
 
@@ -132,7 +132,7 @@
       theme: theme,
       difficulty: settings.difficulty,
     });
-    view = { selectedCell: null, activeSymbol: null, lastMove: null };
+    view = { selectedCell: null, lastMove: null };
     el.gameBadge.textContent = theme.icon + ' ' + settings.size + '×' + settings.size;
     showScreen('game');
     renderGame();
@@ -167,32 +167,28 @@
     renderGame();
   }
 
-  /* 交互不变式：selectedCell 和 activeSymbol 任何时刻最多只有一个生效，
-   * 避免“格子和图案同时高亮”的混乱。 */
+  /* 交互模型：先点格子、再挑图案，指哪填哪。
+   * 图案面板是纯操作按钮，没有选中态，避免“模式”带来的混乱。 */
+  var toastTimer = null;
+
+  function nudge(btn) {
+    K.audio.playTap();
+    if (btn) {
+      btn.classList.add('anim-nudge');
+      setTimeout(function () { btn.classList.remove('anim-nudge'); }, 450);
+    }
+    el.toast.textContent = '👆 先点一个空格哦';
+    // 气泡锚定在图案面板正上方，任何屏幕尺寸都贴近操作位置
+    var palRect = el.palette.getBoundingClientRect();
+    el.toast.style.top = Math.max(palRect.top - 54, 12) + 'px';
+    el.toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.toast.classList.remove('show'); }, 1600);
+  }
+
   var handlers = {
     onCellClick: function (r, c) {
-      if (K.state.isGiven(game, r, c)) {
-        if (view.activeSymbol) {
-          // 印章模式下点题目格：保持印章，不抢占选中态
-          K.audio.playTap();
-          return;
-        }
-        // 点题目格：高亮相同符号，帮助观察；再点一次取消
-        var selGiven = view.selectedCell;
-        var sameGiven = selGiven && selGiven.r === r && selGiven.c === c;
-        view = Object.assign({}, view, { selectedCell: sameGiven ? null : { r: r, c: c }, lastMove: null });
-        K.audio.playTap();
-        renderGame();
-        return;
-      }
-      if (view.activeSymbol === 'eraser') {
-        erase(r, c);
-        return;
-      }
-      if (typeof view.activeSymbol === 'number') {
-        place(r, c, view.activeSymbol);
-        return;
-      }
+      // 点任意格子选中/取消选中；选中题目格可以看同图案高亮
       var sel = view.selectedCell;
       var same = sel && sel.r === r && sel.c === c;
       view = Object.assign({}, view, { selectedCell: same ? null : { r: r, c: c }, lastMove: null });
@@ -200,29 +196,22 @@
       renderGame();
     },
 
-    onSymbolClick: function (value) {
+    onSymbolClick: function (value, btn) {
       var sel = view.selectedCell;
-      if (sel && !view.activeSymbol && !K.state.isGiven(game, sel.r, sel.c)) {
+      if (sel && !K.state.isGiven(game, sel.r, sel.c)) {
         place(sel.r, sel.c, value);
         return;
       }
-      // 没选格子（或选的是题目格）：把符号当作“印章”，再点格子直接盖上去
-      var nextActive = view.activeSymbol === value ? null : value;
-      view = Object.assign({}, view, { activeSymbol: nextActive, selectedCell: null, lastMove: null });
-      K.audio.playTap();
-      renderGame();
+      nudge(btn);
     },
 
-    onEraserClick: function () {
+    onEraserClick: function (btn) {
       var sel = view.selectedCell;
-      if (sel && !view.activeSymbol && !K.state.isGiven(game, sel.r, sel.c)) {
+      if (sel && !K.state.isGiven(game, sel.r, sel.c)) {
         erase(sel.r, sel.c);
         return;
       }
-      var nextActive = view.activeSymbol === 'eraser' ? null : 'eraser';
-      view = Object.assign({}, view, { activeSymbol: nextActive, selectedCell: null, lastMove: null });
-      K.audio.playTap();
-      renderGame();
+      nudge(btn);
     },
   };
 
@@ -284,7 +273,7 @@
       e.preventDefault();
       var r = sel ? Math.min(Math.max(sel.r + dr, 0), game.size - 1) : 0;
       var c = sel ? Math.min(Math.max(sel.c + dc, 0), game.size - 1) : 0;
-      view = Object.assign({}, view, { selectedCell: { r: r, c: c }, activeSymbol: null });
+      view = Object.assign({}, view, { selectedCell: { r: r, c: c } });
       renderGame();
     }
   }
@@ -296,6 +285,7 @@
       homeScreen: document.getElementById('home-screen'),
       gameScreen: document.getElementById('game-screen'),
       winOverlay: document.getElementById('win-overlay'),
+      toast: document.getElementById('toast'),
       starsTotal: document.getElementById('stars-total'),
       sizeOptions: document.getElementById('size-options'),
       themeOptions: document.getElementById('theme-options'),

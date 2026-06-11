@@ -262,13 +262,9 @@ button:disabled { opacity: 0.4; cursor: default; }
   box-shadow: var(--shadow);
   font-size: 1.7rem;
 }
-.symbol-btn.active {
-  border-color: var(--primary);
-  background: #fff1e4;
-  transform: translateY(-4px);
-}
 .symbol-btn.done { opacity: 0.45; }
 .symbol-btn.eraser { font-size: 1.5rem; }
+.symbol-btn.anim-nudge { animation: wiggle 0.3s ease-in-out; }
 
 .symbol-count {
   position: absolute;
@@ -313,6 +309,27 @@ button:disabled { opacity: 0.4; cursor: default; }
   font-size: 1rem;
   font-weight: bold;
 }
+
+/* ---------- 轻提示气泡 ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 40%; /* 兜底值，显示时由 JS 锚定到图案面板上方 */
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(74, 68, 89, 0.92);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: bold;
+  padding: 10px 22px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 60;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ---------- 胜利弹窗 ---------- */
 
