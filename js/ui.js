@@ -10,6 +10,24 @@
     return theme.symbols[value - 1];
   }
 
+  /* 朗读/无障碍用的符号名称：SVG 主题用 names，emoji/数字直接用符号本身 */
+  function symbolName(theme, value) {
+    return theme.names ? theme.names[value - 1] : theme.symbols[value - 1];
+  }
+
+  /* 把符号填进元素：SVG 主题用 innerHTML，其余用 textContent */
+  function setSymbol(elem, theme, value) {
+    if (theme.type === 'svg') elem.innerHTML = symbolFor(theme, value);
+    else elem.textContent = symbolFor(theme, value);
+  }
+
+  /* 蓝粉双色橡皮图标（Unicode 没有橡皮 emoji） */
+  var ERASER_SVG = '<svg viewBox="0 0 64 64" aria-hidden="true">' +
+    '<g transform="rotate(-35 32 32)">' +
+    '<rect x="10" y="22" width="44" height="22" rx="6" fill="#5cc9f5" stroke="rgba(80,60,90,0.3)" stroke-width="1.5"/>' +
+    '<path d="M32 22h16a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H32z" fill="#ff9ec0"/>' +
+    '</g></svg>';
+
   function cellClasses(game, view, r, c) {
     var cls = ['cell'];
     var size = game.size;
@@ -53,9 +71,9 @@
     btn.className = cellClasses(game, view, r, c);
     var v = game.entries[r][c];
     if (v !== 0) {
-      btn.textContent = symbolFor(theme, v);
+      setSymbol(btn, theme, v);
       if (theme.type === 'number') btn.classList.add('num-' + v);
-      btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：' + symbolFor(theme, v));
+      btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：' + symbolName(theme, v));
     } else {
       btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：空');
     }
@@ -125,7 +143,7 @@
 
       var face = document.createElement('span');
       face.className = 'symbol-face';
-      face.textContent = symbolFor(theme, v);
+      setSymbol(face, theme, v);
       btn.appendChild(face);
 
       var badge = document.createElement('span');
@@ -133,7 +151,7 @@
       badge.textContent = remaining > 0 ? remaining : '✓';
       btn.appendChild(badge);
 
-      btn.setAttribute('aria-label', '填入' + symbolFor(theme, v) + '，还差' + Math.max(remaining, 0) + '个');
+      btn.setAttribute('aria-label', '填入' + symbolName(theme, v) + '，还差' + Math.max(remaining, 0) + '个');
       (function (value, button) {
         button.addEventListener('click', function () { handlers.onSymbolClick(value, button); });
       })(v, btn);
@@ -143,7 +161,7 @@
     var eraser = document.createElement('button');
     eraser.type = 'button';
     eraser.className = 'symbol-btn eraser';
-    eraser.innerHTML = '<span class="symbol-face">🧽</span>';
+    eraser.innerHTML = '<span class="symbol-face">' + ERASER_SVG + '</span>';
     eraser.setAttribute('aria-label', '橡皮擦');
     eraser.addEventListener('click', function () { handlers.onEraserClick(eraser); });
     container.appendChild(eraser);

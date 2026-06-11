@@ -104,7 +104,7 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .option-grid { display: grid; gap: 10px; }
 .size-grid { grid-template-columns: repeat(3, 1fr); }
-.theme-grid { grid-template-columns: repeat(5, 1fr); }
+.theme-grid { grid-template-columns: repeat(3, 1fr); }
 .difficulty-grid { grid-template-columns: repeat(3, 1fr); }
 
 .option-btn {
@@ -188,27 +188,23 @@ button:disabled { opacity: 0.4; cursor: default; }
   max-width: min(94vw, 532px);
 }
 
-/* 有宫的棋盘：外层网格按“宫”排布，宫之间留更大间隙 */
+/* 有宫的棋盘：宫之间只隔一条细线（板底色透出来），行列保持连贯 */
 .board.boxed {
   grid-template-columns: repeat(var(--bpr), 1fr);
-  gap: 7px;
-  padding: 7px;
+  gap: 4px;
+  padding: 6px;
+  background: #b9abe2;
+  border-color: #b9abe2;
 }
 
-/* 每个宫：圆角粗边框的小区块，配合双色边框/底色，一眼分组 */
 .box {
   display: grid;
   grid-template-columns: repeat(var(--bc), 1fr);
   gap: 3px;
-  padding: 4px;
-  border: 3px solid #b9abe2;
-  border-radius: 14px;
-  background: #f6f3fe;
+  border-radius: 8px;
+  background: var(--card);
 }
-.box.box-tint {
-  border-color: #93bdec;
-  background: #e3eefc;
-}
+.box.box-tint { background: #e9f1fd; }
 
 .cell {
   aspect-ratio: 1;
@@ -292,7 +288,6 @@ button:disabled { opacity: 0.4; cursor: default; }
   font-size: 1.7rem;
 }
 .symbol-btn.done { opacity: 0.45; }
-.symbol-btn.eraser { font-size: 1.5rem; }
 .symbol-btn.anim-nudge { animation: wiggle 0.3s ease-in-out; }
 
 .symbol-count {
@@ -403,5 +398,13 @@ button:disabled { opacity: 0.4; cursor: default; }
   .home-header h1 { font-size: 1.8rem; }
   .symbol-btn { width: 48px; height: 48px; font-size: 1.4rem; }
   .size-grid { grid-template-columns: repeat(3, 1fr); }
-  .theme-grid { grid-template-columns: repeat(5, 1fr); }
+  .theme-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* SVG 图案（小马主题、橡皮图标）：跟随字号缩放，与 emoji 行为一致 */
+.cell svg,
+.symbol-face svg {
+  width: 1em;
+  height: 1em;
+  display: block;
 }
