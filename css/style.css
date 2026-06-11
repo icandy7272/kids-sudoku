@@ -401,10 +401,14 @@ button:disabled { opacity: 0.4; cursor: default; }
   .theme-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* SVG 图案（小马主题、橡皮图标）：跟随字号缩放，与 emoji 行为一致 */
+/* SVG/图片图案（小马头像、橡皮图标）：跟随字号缩放，与 emoji 行为一致 */
 .cell svg,
-.symbol-face svg {
+.symbol-face svg,
+.cell img,
+.symbol-face img {
   width: 1em;
   height: 1em;
   display: block;
+  object-fit: contain;
+  pointer-events: none;
 }

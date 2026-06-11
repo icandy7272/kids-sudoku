@@ -15,10 +15,15 @@
     return theme.names ? theme.names[value - 1] : theme.symbols[value - 1];
   }
 
-  /* 把符号填进元素：SVG 主题用 innerHTML，其余用 textContent */
+  /* 把符号填进元素：图片主题渲染 <img>，SVG 主题用 innerHTML，其余用 textContent */
   function setSymbol(elem, theme, value) {
-    if (theme.type === 'svg') elem.innerHTML = symbolFor(theme, value);
-    else elem.textContent = symbolFor(theme, value);
+    if (theme.type === 'image') {
+      elem.innerHTML = '<img src="' + symbolFor(theme, value) + '" alt="" draggable="false">';
+    } else if (theme.type === 'svg') {
+      elem.innerHTML = symbolFor(theme, value);
+    } else {
+      elem.textContent = symbolFor(theme, value);
+    }
   }
 
   /* 蓝粉双色橡皮图标（Unicode 没有橡皮 emoji） */
