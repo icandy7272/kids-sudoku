@@ -46,29 +46,56 @@
     return cls.join(' ');
   }
 
-  function renderBoard(container, game, view, handlers) {
+  function buildCell(game, view, handlers, r, c) {
     var theme = game.theme;
-    container.innerHTML = '';
-    container.style.setProperty('--n', game.size);
-    container.classList.toggle('numbers-theme', theme.type === 'number');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = cellClasses(game, view, r, c);
+    var v = game.entries[r][c];
+    if (v !== 0) {
+      btn.textContent = symbolFor(theme, v);
+      if (theme.type === 'number') btn.classList.add('num-' + v);
+      btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：' + symbolFor(theme, v));
+    } else {
+      btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：空');
+    }
+    btn.addEventListener('click', function () { handlers.onCellClick(r, c); });
+    return btn;
+  }
 
-    for (var r = 0; r < game.size; r++) {
-      for (var c = 0; c < game.size; c++) {
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = cellClasses(game, view, r, c);
-        var v = game.entries[r][c];
-        if (v !== 0) {
-          btn.textContent = symbolFor(theme, v);
-          if (theme.type === 'number') btn.classList.add('num-' + v);
-          btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：' + symbolFor(theme, v));
-        } else {
-          btn.setAttribute('aria-label', '第' + (r + 1) + '行第' + (c + 1) + '列：空');
+  /* 有宫的棋盘按“宫容器”嵌套渲染，每宫有明显外框；
+   * 拉丁方阵（5×5/7×7）没有宫，保持平铺。 */
+  function renderBoard(container, game, view, handlers) {
+    var size = game.size;
+    var dims = boxes.getBoxDims(size);
+    container.innerHTML = '';
+    container.style.setProperty('--n', size);
+    container.classList.toggle('numbers-theme', game.theme.type === 'number');
+    container.classList.toggle('boxed', !!dims);
+
+    if (!dims) {
+      for (var r = 0; r < size; r++) {
+        for (var c = 0; c < size; c++) {
+          container.appendChild(buildCell(game, view, handlers, r, c));
         }
-        (function (row, col) {
-          btn.addEventListener('click', function () { handlers.onCellClick(row, col); });
-        })(r, c);
-        container.appendChild(btn);
+      }
+      return;
+    }
+
+    var boxesPerRow = size / dims.cols;
+    var boxesPerCol = size / dims.rows;
+    container.style.setProperty('--bpr', boxesPerRow);
+    for (var br = 0; br < boxesPerCol; br++) {
+      for (var bc = 0; bc < boxesPerRow; bc++) {
+        var box = document.createElement('div');
+        box.className = 'box' + ((br + bc) % 2 === 1 ? ' box-tint' : '');
+        box.style.setProperty('--bc', dims.cols);
+        for (var r2 = br * dims.rows; r2 < (br + 1) * dims.rows; r2++) {
+          for (var c2 = bc * dims.cols; c2 < (bc + 1) * dims.cols; c2++) {
+            box.appendChild(buildCell(game, view, handlers, r2, c2));
+          }
+        }
+        container.appendChild(box);
       }
     }
   }

@@ -188,6 +188,28 @@ button:disabled { opacity: 0.4; cursor: default; }
   max-width: min(94vw, 532px);
 }
 
+/* 有宫的棋盘：外层网格按“宫”排布，宫之间留更大间隙 */
+.board.boxed {
+  grid-template-columns: repeat(var(--bpr), 1fr);
+  gap: 7px;
+  padding: 7px;
+}
+
+/* 每个宫：圆角粗边框的小区块，配合双色边框/底色，一眼分组 */
+.box {
+  display: grid;
+  grid-template-columns: repeat(var(--bc), 1fr);
+  gap: 3px;
+  padding: 4px;
+  border: 3px solid #b9abe2;
+  border-radius: 14px;
+  background: #f6f3fe;
+}
+.box.box-tint {
+  border-color: #93bdec;
+  background: #e3eefc;
+}
+
 .cell {
   aspect-ratio: 1;
   display: flex;
