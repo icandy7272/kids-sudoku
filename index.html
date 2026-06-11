@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="适合孩子的数独游戏：4-9 宫格，图形或数字自由选" />
+  <meta name="theme-color" content="#ff8a3d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="数独乐园" />
+  <title>数独乐园 🌈</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- 主页：选择棋盘、主题、难度 -->
+    <section id="home-screen" class="screen">
+      <header class="home-header">
+        <h1>🧩 数独乐园</h1>
+        <p class="subtitle">每行、每列都不能重复哦！</p>
+        <div class="stars-banner">⭐ 我的星星：<span id="stars-total">0</span></div>
+      </header>
+
+      <div class="option-card">
+        <h2>🎲 棋盘大小</h2>
+        <div id="size-options" class="option-grid size-grid"></div>
+      </div>
+
+      <div class="option-card">
+        <h2>🎨 图案主题</h2>
+        <div id="theme-options" class="option-grid theme-grid"></div>
+      </div>
+
+      <div class="option-card">
+        <h2>🌟 难度</h2>
+        <div id="difficulty-options" class="option-grid difficulty-grid"></div>
+      </div>
+
+      <button id="start-btn" type="button" class="big-btn start">🚀 开始游戏</button>
+    </section>
+
+    <!-- 游戏页 -->
+    <section id="game-screen" class="screen hidden">
+      <header class="game-header">
+        <button id="home-btn" type="button" class="icon-btn" aria-label="回到主页">🏠</button>
+        <span id="game-badge" class="game-badge"></span>
+        <button id="mute-btn" type="button" class="icon-btn" aria-label="声音开关">🔊</button>
+      </header>
+
+      <div id="board" class="board" role="grid"></div>
+
+      <div id="palette" class="palette"></div>
+
+      <div class="action-row">
+        <button id="hint-btn" type="button" class="action-btn">💡 提示</button>
+        <button id="undo-btn" type="button" class="action-btn">↩️ 撤销</button>
+        <button id="new-btn" type="button" class="action-btn">🔄 换一题</button>
+      </div>
+    </section>
+
+    <!-- 胜利弹窗 -->
+    <div id="win-overlay" class="overlay hidden">
+      <div class="win-card">
+        <div class="win-emoji">🎉</div>
+        <h2 id="win-praise">太棒了！</h2>
+        <div id="win-stars" class="win-stars">⭐</div>
+        <p id="win-total" class="win-total"></p>
+        <button id="win-again-btn" type="button" class="big-btn">🚀 再玩一局</button>
+        <button id="win-home-btn" type="button" class="big-btn ghost">🏠 回主页</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/boxes.js"></script>
+  <script src="js/solver.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

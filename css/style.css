@@ -1,0 +1,355 @@
+/* 数独乐园 — 儿童友好样式：大按钮、圆角、明亮配色 */
+
+:root {
+  --bg-top: #d8f1ff;
+  --bg-bottom: #fff6e0;
+  --card: #ffffff;
+  --ink: #4a4459;
+  --ink-soft: #8d86a0;
+  --primary: #ff8a3d;
+  --primary-dark: #f0701f;
+  --accent: #5cc9f5;
+  --good: #57cc99;
+  --bad: #ff6b6b;
+  --given-bg: #f1edff;
+  --line: #e7e2f3;
+  --shadow: 0 6px 0 rgba(74, 68, 89, 0.12);
+  --radius: 20px;
+  --num-1: #e74c3c; --num-2: #e67e22; --num-3: #d4a017;
+  --num-4: #2ecc71; --num-5: #1abc9c; --num-6: #3498db;
+  --num-7: #9b59b6; --num-8: #fd79a8; --num-9: #a0522d;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Chalkboard SE', 'Comic Sans MS', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--ink);
+  /* 不用 background-attachment: fixed，iOS Safari 下有渲染 bug */
+  background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom)) no-repeat;
+  background-size: 100% 100%;
+  min-height: 100vh;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  /* 避免 iOS 长按弹出放大镜/呼出菜单干扰孩子操作 */
+  -webkit-touch-callout: none;
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 14px 32px;
+}
+
+.hidden { display: none !important; }
+
+button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+button:active { transform: scale(0.95); }
+button:disabled { opacity: 0.4; cursor: default; }
+
+/* ---------- 主页 ---------- */
+
+.home-header { text-align: center; margin-bottom: 14px; }
+
+.home-header h1 {
+  font-size: 2.2rem;
+  margin: 8px 0 4px;
+  text-shadow: 0 3px 0 rgba(255, 138, 61, 0.25);
+}
+
+.subtitle {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+.stars-banner {
+  display: inline-block;
+  background: #fff3c4;
+  border: 2px solid #ffd95e;
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.option-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 14px 16px;
+  margin-bottom: 14px;
+}
+
+.option-card h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+}
+
+.option-grid { display: grid; gap: 10px; }
+.size-grid { grid-template-columns: repeat(3, 1fr); }
+.theme-grid { grid-template-columns: repeat(5, 1fr); }
+.difficulty-grid { grid-template-columns: repeat(3, 1fr); }
+
+.option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  border-radius: 16px;
+  border: 3px solid var(--line);
+  background: #fbfaff;
+  transition: border-color 0.15s, background 0.15s;
+}
+.option-btn b { font-size: 1.05rem; }
+.option-btn small { color: var(--ink-soft); font-size: 0.75rem; }
+.option-btn .opt-icon { font-size: 1.6rem; line-height: 1.2; }
+.option-btn.selected {
+  border-color: var(--primary);
+  background: #fff1e4;
+}
+.option-btn.selected small { color: var(--primary-dark); }
+
+.big-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: bold;
+  box-shadow: 0 6px 0 var(--primary-dark);
+  margin-top: 4px;
+}
+.big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--primary-dark); }
+.big-btn.ghost {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 6px 0 rgba(74, 68, 89, 0.15);
+  margin-top: 10px;
+}
+
+/* ---------- 游戏页 ---------- */
+
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.icon-btn {
+  font-size: 1.5rem;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 8px 12px;
+}
+
+.game-badge {
+  background: var(--card);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  padding: 8px 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.board {
+  --n: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--n), 1fr);
+  gap: 3px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 8px;
+  margin: 0 auto 14px;
+  width: 100%;
+  max-width: min(94vw, 532px);
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fbfaff;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  font-size: calc(min(94vw, 532px) / var(--n) * 0.5);
+  line-height: 1;
+  padding: 0;
+  transition: background 0.1s, border-color 0.1s;
+}
+.board.numbers-theme .cell { font-weight: bold; }
+
+.cell.given { background: var(--given-bg); }
+/* 相邻宫交替底色（在高亮规则之前，可被高亮覆盖） */
+.cell.box-alt { background: #d9e9fc; border-color: #c5daf3; }
+.cell.box-alt.given { background: #d2d3f3; }
+.cell.hl-line { background: #fff4cd; }
+.cell.hl-same { background: #aee2ff; border-color: var(--accent); }
+.cell.selected {
+  border-color: var(--primary);
+  background: #fff1e4;
+  box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.35);
+}
+.cell.wrong {
+  background: #ffe3e3;
+  border-color: var(--bad);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.4); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(-3deg); }
+  75% { transform: translateX(5px) rotate(3deg); }
+}
+.cell.anim-pop { animation: pop 0.25s ease-out; }
+.cell.anim-wiggle { animation: wiggle 0.3s ease-in-out 2; }
+
+/* ---------- 符号面板 ---------- */
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.symbol-btn {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 3px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-size: 1.7rem;
+}
+.symbol-btn.active {
+  border-color: var(--primary);
+  background: #fff1e4;
+  transform: translateY(-4px);
+}
+.symbol-btn.done { opacity: 0.45; }
+.symbol-btn.eraser { font-size: 1.5rem; }
+
+.symbol-count {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 999px;
+  padding: 0 4px;
+}
+.symbol-btn.done .symbol-count { background: var(--good); }
+
+/* 数字主题的彩虹颜色 */
+.num-1 { color: var(--num-1); } .num-2 { color: var(--num-2); }
+.num-3 { color: var(--num-3); } .num-4 { color: var(--num-4); }
+.num-5 { color: var(--num-5); } .num-6 { color: var(--num-6); }
+.num-7 { color: var(--num-7); } .num-8 { color: var(--num-8); }
+.num-9 { color: var(--num-9); }
+
+/* ---------- 操作按钮 ---------- */
+
+.action-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  max-width: 150px;
+  padding: 12px 8px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* ---------- 胜利弹窗 ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 68, 89, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+
+.win-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 28px 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 340px;
+  animation: pop 0.35s ease-out;
+}
+
+.win-emoji { font-size: 3.2rem; }
+.win-card h2 { margin: 8px 0 4px; font-size: 1.6rem; }
+.win-stars { font-size: 2rem; margin: 6px 0; }
+.win-total { color: var(--ink-soft); margin: 0 0 18px; }
+
+/* ---------- 彩纸画布 ---------- */
+
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ---------- 宫格粗边框 ---------- */
+
+.cell.box-r { border-right-width: 4px; border-right-color: #c9bfe8; }
+.cell.box-b { border-bottom-width: 4px; border-bottom-color: #c9bfe8; }
+
+/* ---------- 小屏适配 ---------- */
+
+@media (max-width: 400px) {
+  .home-header h1 { font-size: 1.8rem; }
+  .symbol-btn { width: 48px; height: 48px; font-size: 1.4rem; }
+  .size-grid { grid-template-columns: repeat(3, 1fr); }
+  .theme-grid { grid-template-columns: repeat(5, 1fr); }
+}

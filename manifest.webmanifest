@@ -1,0 +1,13 @@
+{
+  "name": "数独乐园",
+  "short_name": "数独乐园",
+  "description": "适合孩子的数独游戏：4-9 宫格，图形或数字自由选",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#d8f1ff",
+  "theme_color": "#ff8a3d",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
