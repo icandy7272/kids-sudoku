@@ -220,6 +220,13 @@ button:disabled { opacity: 0.4; cursor: default; }
   background: #fff1e4;
   box-shadow: 0 0 0 3px rgba(255, 138, 61, 0.35);
 }
+/* 选中且已填对：绿色外框（含深色宫块题目格的组合，保证优先级一致） */
+.cell.selected.correct,
+.cell.box-alt.given.selected.correct {
+  border-color: var(--good);
+  background: #e6f8ee;
+  box-shadow: 0 0 0 3px rgba(87, 204, 153, 0.4);
+}
 .cell.wrong,
 .cell.box-alt.given.wrong {
   background: #ffe3e3;

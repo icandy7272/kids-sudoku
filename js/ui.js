@@ -28,8 +28,13 @@
 
     var sel = view.selectedCell;
     if (sel) {
-      if (sel.r === r && sel.c === c) cls.push('selected');
-      else if (sel.r === r || sel.c === c) cls.push('hl-line');
+      if (sel.r === r && sel.c === c) {
+        cls.push('selected');
+        // 选中的格子已填对：外框转绿色作为正向反馈（填错保持红色，由 wrong 规则负责）
+        if (v !== 0 && v === game.solution[r][c]) cls.push('correct');
+      } else if (sel.r === r || sel.c === c) {
+        cls.push('hl-line');
+      }
       var selVal = game.entries[sel.r][sel.c];
       if (selVal !== 0 && v === selVal) cls.push('hl-same');
     }
