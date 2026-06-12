@@ -17,6 +17,20 @@
     { file: 'spike.png', name: '穗龙' },
   ];
 
+  /* 愿望猫（用户自备素材，仅个人非商业用途）。前 4 只配色区分度最高，供小棋盘使用 */
+  var WISHCAT_DIR = 'assets/wishcats/';
+  var WISHCATS = [
+    { file: 'pink.png', name: '粉粉猫' },
+    { file: 'crown.png', name: '皇冠猫' },
+    { file: 'star.png', name: '星星猫' },
+    { file: 'chef.png', name: '厨师猫' },
+    { file: 'sailor.png', name: '水手猫' },
+    { file: 'sporty.png', name: '元气猫' },
+    { file: 'flower.png', name: '花花猫' },
+    { file: 'glasses.png', name: '眼镜猫' },
+    { file: 'bow.png', name: '蝴蝶结猫' },
+  ];
+
   var THEMES = [
     {
       id: 'animals',
@@ -53,6 +67,16 @@
       type: 'image',
       symbols: PONIES.map(function (p) { return PONY_DIR + p.file; }),
       names: PONIES.map(function (p) { return p.name; }),
+      confetti: ['🦄', '🌈', '⭐'],
+    },
+    {
+      id: 'wishcat',
+      name: '愿望猫',
+      icon: '😺',
+      type: 'image',
+      symbols: WISHCATS.map(function (c) { return WISHCAT_DIR + c.file; }),
+      names: WISHCATS.map(function (c) { return c.name; }),
+      confetti: ['😺', '💖', '⭐'],
     },
     {
       id: 'numbers',

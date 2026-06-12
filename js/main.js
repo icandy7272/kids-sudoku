@@ -240,9 +240,8 @@
     var earned = DIFFICULTY_OPTIONS.filter(function (d) { return d.id === game.difficulty; })[0].stars;
     addStars(earned);
     K.audio.playWin();
-    var confettiEmojis = game.theme.type === 'emoji'
-      ? game.theme.symbols.slice(0, game.size)
-      : (game.theme.id === 'pony' ? ['🦄', '🌈', '⭐'] : ['⭐', '🎉']);
+    var confettiEmojis = game.theme.confetti
+      || (game.theme.type === 'emoji' ? game.theme.symbols.slice(0, game.size) : ['⭐', '🎉']);
     K.confetti.launch(confettiEmojis, 3500);
     el.winPraise.textContent = PRAISES[Math.floor(Math.random() * PRAISES.length)];
     el.winStars.textContent = '⭐'.repeat(earned);
