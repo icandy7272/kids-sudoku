@@ -401,14 +401,34 @@ button:disabled { opacity: 0.4; cursor: default; }
   .theme-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* SVG/图片图案（小马头像、橡皮图标）：跟随字号缩放，与 emoji 行为一致 */
+/* SVG/图片图案（小马头像、橡皮图标）的通用规则 */
 .cell svg,
 .symbol-face svg,
 .cell img,
 .symbol-face img {
-  width: 1em;
-  height: 1em;
   display: block;
   object-fit: contain;
   pointer-events: none;
+}
+
+/* 棋盘格里的图片占满格子（孩子贴近屏幕看，留白尽量少） */
+.cell img,
+.cell svg {
+  width: 92%;
+  height: 92%;
+}
+
+/* 印章面板里的图片/橡皮也放大到接近满幅 */
+.symbol-face img,
+.symbol-face svg {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+@media (max-width: 400px) {
+  .symbol-face img,
+  .symbol-face svg {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
 }
