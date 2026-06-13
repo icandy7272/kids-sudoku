@@ -112,6 +112,8 @@
     el.homeScreen.classList.toggle('hidden', name !== 'home');
     el.gameScreen.classList.toggle('hidden', name !== 'game');
     el.winOverlay.classList.add('hidden');
+    // 游戏页锁定页面禁止滑动，主页恢复可滚动
+    document.body.classList.toggle('game-active', name === 'game');
   }
 
   /* ---------- 游戏 ---------- */

@@ -52,10 +52,14 @@ body {
 #game-screen:not(.hidden) {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  min-height: calc(100vh - 38px);   /* 兼容不支持 dvh 的旧浏览器（如微信 WebView） */
   min-height: calc(100dvh - 38px);
 }
 #game-screen .action-row { margin-top: auto; }
+
+/* 游戏进行中锁定页面，禁止上下滑动；主页仍可正常滚动 */
+body.game-active { overflow: hidden; }
 
 .hidden { display: none !important; }
 
@@ -184,8 +188,10 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .board {
   --n: 4;
-  /* 取宽度与剩余高度里较小的一个，让棋盘在任何屏幕都尽量大 */
-  --board-size: min(96vw, calc(100dvh - 250px), 640px);
+  /* 预留给标题/印章/操作按钮的高度，棋盘取“宽度”与“剩余高度”中较小者，尽量大但不撑出屏幕 */
+  --reserve: 310px;
+  --board-size: min(96vw, calc(100vh - var(--reserve)), 600px);   /* 旧浏览器兜底 */
+  --board-size: min(96vw, calc(100dvh - var(--reserve)), 600px);
   display: grid;
   grid-template-columns: repeat(var(--n), 1fr);
   gap: 3px;
@@ -196,7 +202,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   padding: 8px;
   margin: 0 auto;
   width: var(--board-size);
-  height: var(--board-size);
+  /* 高度由方格 aspect-ratio 自然决定，不强制，避免宫格被拉伸导致图案溢出 */
 }
 
 /* 有宫的棋盘：宫之间只隔一条细线（板底色透出来），行列保持连贯 */
@@ -214,6 +220,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   gap: 3px;
   border-radius: 8px;
   background: var(--card);
+  overflow: hidden;
 }
 .box.box-tint { background: #e9f1fd; }
 
@@ -226,6 +233,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   border: 2px solid var(--line);
   border-radius: 10px;
   box-shadow: none;
+  overflow: hidden;
   font-size: calc(var(--board-size) / var(--n) * 0.5);
   line-height: 1;
   padding: 0;
@@ -286,9 +294,9 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .symbol-btn {
   position: relative;
-  /* 随屏幕宽度放大，让印章尽量大又能整行排下 */
-  width: min(68px, 17vw);
-  height: min(68px, 17vw);
+  /* 随屏宽放大，但限制在每行 5 个以内，9+橡皮共 10 个稳定排成 2 行，避免占太多竖向空间 */
+  width: min(64px, 16vw);
+  height: min(64px, 16vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +304,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   border: 3px solid var(--line);
   border-radius: 16px;
   box-shadow: var(--shadow);
-  font-size: min(2.1rem, 9vw);
+  font-size: min(2rem, 8.5vw);
 }
 .symbol-btn.done { opacity: 0.45; }
 .symbol-btn.anim-nudge { animation: wiggle 0.3s ease-in-out; }
@@ -431,6 +439,6 @@ button:disabled { opacity: 0.4; cursor: default; }
 /* 印章面板里的图片/橡皮放大到接近满幅，随按钮一起缩放 */
 .symbol-face img,
 .symbol-face svg {
-  width: min(3rem, 13vw);
-  height: min(3rem, 13vw);
+  width: min(2.8rem, 12vw);
+  height: min(2.8rem, 12vw);
 }
