@@ -116,8 +116,31 @@
 
   /* ---------- 游戏 ---------- */
 
+  /* 选出本局要用的符号：数字主题保持 1..N 连续；
+   * 图形/图片主题从全部 9 个里随机抽 N 个（小棋盘每局都换一批，增加多样性）。
+   * 不修改全局主题对象，返回一个本局专用的副本。 */
+  function resolveTheme(theme, size) {
+    if (theme.type === 'number' || theme.symbols.length <= size) {
+      return Object.assign({}, theme, {
+        symbols: theme.symbols.slice(0, size),
+        names: theme.names ? theme.names.slice(0, size) : undefined,
+      });
+    }
+    var indices = [];
+    for (var i = 0; i < theme.symbols.length; i++) indices.push(i);
+    for (var j = indices.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var tmp = indices[j]; indices[j] = indices[k]; indices[k] = tmp;
+    }
+    var picked = indices.slice(0, size);
+    return Object.assign({}, theme, {
+      symbols: picked.map(function (idx) { return theme.symbols[idx]; }),
+      names: theme.names ? picked.map(function (idx) { return theme.names[idx]; }) : undefined,
+    });
+  }
+
   function startGame() {
-    var theme = K.themes.getTheme(settings.themeId);
+    var theme = resolveTheme(K.themes.getTheme(settings.themeId), settings.size);
     var generated;
     try {
       generated = K.generator.generatePuzzle(settings.size, settings.difficulty);
