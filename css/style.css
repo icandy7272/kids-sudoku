@@ -43,10 +43,19 @@ body {
 }
 
 .app {
-  max-width: 560px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 16px 14px 32px;
+  padding: 14px 12px 24px;
 }
+
+/* 游戏页：竖直方向填满屏幕，棋盘和印章尽量铺大（孩子贴近屏幕看） */
+#game-screen:not(.hidden) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: calc(100dvh - 38px);
+}
+#game-screen .action-row { margin-top: auto; }
 
 .hidden { display: none !important; }
 
@@ -175,6 +184,8 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 .board {
   --n: 4;
+  /* 取宽度与剩余高度里较小的一个，让棋盘在任何屏幕都尽量大 */
+  --board-size: min(96vw, calc(100dvh - 250px), 640px);
   display: grid;
   grid-template-columns: repeat(var(--n), 1fr);
   gap: 3px;
@@ -183,9 +194,9 @@ button:disabled { opacity: 0.4; cursor: default; }
   /* 棋盘保持扁平，去掉阴影让盘面更清晰 */
   border: 2px solid var(--line);
   padding: 8px;
-  margin: 0 auto 14px;
-  width: 100%;
-  max-width: min(94vw, 532px);
+  margin: 0 auto;
+  width: var(--board-size);
+  height: var(--board-size);
 }
 
 /* 有宫的棋盘：宫之间只隔一条细线（板底色透出来），行列保持连贯 */
@@ -215,7 +226,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   border: 2px solid var(--line);
   border-radius: 10px;
   box-shadow: none;
-  font-size: calc(min(94vw, 532px) / var(--n) * 0.5);
+  font-size: calc(var(--board-size) / var(--n) * 0.5);
   line-height: 1;
   padding: 0;
   transition: background 0.1s, border-color 0.1s;
@@ -270,14 +281,14 @@ button:disabled { opacity: 0.4; cursor: default; }
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: 10px;
 }
 
 .symbol-btn {
   position: relative;
-  width: 56px;
-  height: 56px;
+  /* 随屏幕宽度放大，让印章尽量大又能整行排下 */
+  width: min(68px, 17vw);
+  height: min(68px, 17vw);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,7 +296,7 @@ button:disabled { opacity: 0.4; cursor: default; }
   border: 3px solid var(--line);
   border-radius: 16px;
   box-shadow: var(--shadow);
-  font-size: 1.7rem;
+  font-size: min(2.1rem, 9vw);
 }
 .symbol-btn.done { opacity: 0.45; }
 .symbol-btn.anim-nudge { animation: wiggle 0.3s ease-in-out; }
@@ -396,7 +407,6 @@ button:disabled { opacity: 0.4; cursor: default; }
 
 @media (max-width: 400px) {
   .home-header h1 { font-size: 1.8rem; }
-  .symbol-btn { width: 48px; height: 48px; font-size: 1.4rem; }
   .size-grid { grid-template-columns: repeat(3, 1fr); }
   .theme-grid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -418,17 +428,9 @@ button:disabled { opacity: 0.4; cursor: default; }
   height: 92%;
 }
 
-/* 印章面板里的图片/橡皮也放大到接近满幅 */
+/* 印章面板里的图片/橡皮放大到接近满幅，随按钮一起缩放 */
 .symbol-face img,
 .symbol-face svg {
-  width: 2.6rem;
-  height: 2.6rem;
-}
-
-@media (max-width: 400px) {
-  .symbol-face img,
-  .symbol-face svg {
-    width: 2.15rem;
-    height: 2.15rem;
-  }
+  width: min(3rem, 13vw);
+  height: min(3rem, 13vw);
 }
